@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { getCookie } from '../../../utils/cookie';
 
 type ProtectedRouteProps = {
   children: React.ReactElement;
@@ -12,8 +13,7 @@ export const ProtectedRoute = ({
 }: ProtectedRouteProps) => {
   const location = useLocation();
 
-  // пока просто заглушка
-  const isAuth = false;
+  const isAuth = Boolean(getCookie('accessToken'));
 
   if (!onlyUnAuth && !isAuth) {
     return <Navigate to='/login' state={{ from: location }} replace />;
