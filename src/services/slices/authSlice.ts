@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { loginUserApi, registerUserApi } from '@api';
+import { getUserApi, loginUserApi, registerUserApi } from '@api';
 import { deleteCookie, setCookie } from '../../utils/cookie';
 
 type RegisterData = {
@@ -22,12 +22,14 @@ type UserState = {
   user: User | null;
   errorText: string;
   isLoading: boolean;
+  isAuthChecked: boolean;
 };
 
 const initialState: UserState = {
   user: null,
   errorText: '',
-  isLoading: false
+  isLoading: false,
+  isAuthChecked: false
 };
 
 export const loginUser = createAsyncThunk(
@@ -58,6 +60,20 @@ export const registerUser = createAsyncThunk(
       return response.user;
     } catch (error: any) {
       return rejectWithValue(error?.message || 'Ошибка регистрации');
+    }
+  }
+);
+
+export const getUser = createAsyncThunk(
+  'user/getUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getUserApi();
+      return response.user;
+    } catch (error: any) {
+      return rejectWithValue(
+        error?.message || 'Не удалось получить пользователя'
+      );
     }
   }
 );
@@ -119,6 +135,20 @@ const userSlice = createSlice({
             : 'Ошибка авторизации';
       })
 
+      .addCase(getUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthChecked = true;
+      })
+      .addCase(getUser.rejected, (state) => {
+        state.user = null;
+        state.isLoading = false;
+        state.isAuthChecked = true;
+      })
+
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.errorText = '';
@@ -128,12 +158,17 @@ const userSlice = createSlice({
   selectors: {
     selectUser: (state) => state.user,
     selectUserError: (state) => state.errorText,
-    selectUserLoading: (state) => state.isLoading
+    selectUserLoading: (state) => state.isLoading,
+    selectIsAuthChecked: (state) => state.isAuthChecked
   }
 });
 
 export const { clearError } = userSlice.actions;
-export const { selectUser, selectUserError, selectUserLoading } =
-  userSlice.selectors;
+export const {
+  selectUser,
+  selectUserError,
+  selectUserLoading,
+  selectIsAuthChecked
+} = userSlice.selectors;
 
 export default userSlice.reducer;

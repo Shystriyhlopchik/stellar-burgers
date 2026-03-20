@@ -15,11 +15,25 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { ProtectedRoute } from '../../entities/user/ui/ProtectedRoute';
+import { useSelector } from 'react-redux';
+import { getUser, selectIsAuthChecked } from '../../services/slices/authSlice';
+import { useDispatch } from '../../services/store';
+import { getCookie } from '../../utils/cookie';
+import { useEffect } from 'react';
 
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const background = location.state?.background;
+
+  const dispatch = useDispatch();
+  const isAuthChecked = useSelector(selectIsAuthChecked);
+
+  useEffect(() => {
+    if (getCookie('accessToken')) {
+      dispatch(getUser());
+    }
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
