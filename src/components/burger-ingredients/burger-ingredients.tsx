@@ -20,7 +20,7 @@ export const BurgerIngredients: FC = () => {
 
   const buns: TIngredient[] = ingredients.filter((item) => item.type === 'bun');
   const mains: TIngredient[] = ingredients.filter(
-    (item) => item.type === 'bun'
+    (item) => item.type === 'main'
   );
   const sauces: TIngredient[] = ingredients.filter(
     (item) => item.type === 'sauce'
