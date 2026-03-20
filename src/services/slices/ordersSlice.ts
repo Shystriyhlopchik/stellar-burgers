@@ -4,11 +4,15 @@ import { getOrdersApi } from '@api';
 
 type OrdersState = {
   orders: TOrder[];
+  total: number;
+  totalToday: number;
   isLoading: boolean;
 };
 
 const initialState: OrdersState = {
   orders: [],
+  total: 0,
+  totalToday: 0,
   isLoading: false
 };
 
@@ -27,7 +31,10 @@ const ordersSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
-        state.orders = action.payload;
+        const { orders, total, totalToday } = action.payload;
+        state.orders = orders;
+        state.total = total;
+        state.totalToday = totalToday;
         state.isLoading = false;
       })
       .addCase(fetchOrders.rejected, (state) => {
@@ -36,9 +43,14 @@ const ordersSlice = createSlice({
   },
   selectors: {
     selectOrders: (state) => state.orders,
-    selectIsLoading: (state) => state.isLoading
+    selectIsLoading: (state) => state.isLoading,
+    selectIsFeed: (state) => ({
+      total: state.total,
+      totalToday: state.totalToday
+    })
   }
 });
 
-export const { selectOrders, selectIsLoading } = ordersSlice.selectors;
+export const { selectOrders, selectIsLoading, selectIsFeed } =
+  ordersSlice.selectors;
 export default ordersSlice.reducer;
