@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getUserApi, loginUserApi, logoutApi, registerUserApi } from '@api';
+import {
+  getUserApi,
+  loginUserApi,
+  logoutApi,
+  registerUserApi,
+  updateUserApi
+} from '@api';
 import { deleteCookie, setCookie } from '../../utils/cookie';
 
 type RegisterData = {
@@ -60,6 +66,21 @@ export const registerUser = createAsyncThunk(
       return response.user;
     } catch (error: any) {
       return rejectWithValue(error?.message || 'Ошибка регистрации');
+    }
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  'auth/updateUser',
+  async (
+    data: { name: string; email: string; password?: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await updateUserApi(data);
+      return response.user;
+    } catch (error: any) {
+      return rejectWithValue(error?.message || 'Ошибка обновления профиля');
     }
   }
 );
@@ -154,6 +175,10 @@ const userSlice = createSlice({
         state.user = null;
         state.errorText = '';
         state.isLoading = false;
+      })
+
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   },
   selectors: {

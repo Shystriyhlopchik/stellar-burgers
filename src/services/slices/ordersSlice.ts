@@ -47,7 +47,8 @@ const ordersSlice = createSlice({
     selectIsFeed: (state) => ({
       total: state.total,
       totalToday: state.totalToday
-    })
+    }),
+    selectUserOrders: (state) => state.orders
   }
 });
 
