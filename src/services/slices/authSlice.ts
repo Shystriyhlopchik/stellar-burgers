@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getUserApi, loginUserApi, registerUserApi } from '@api';
+import { getUserApi, loginUserApi, logoutApi, registerUserApi } from '@api';
 import { deleteCookie, setCookie } from '../../utils/cookie';
 
 type RegisterData = {
@@ -82,6 +82,7 @@ export const logoutUser = createAsyncThunk(
   'user/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
+      await logoutApi();
       deleteCookie('accessToken');
       localStorage.removeItem('refreshToken');
       return null;
