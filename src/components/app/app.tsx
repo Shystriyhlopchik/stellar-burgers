@@ -19,7 +19,11 @@ import { useSelector } from 'react-redux';
 import { getUser, selectIsAuthChecked } from '../../services/slices/authSlice';
 import { useDispatch } from '../../services/store';
 import { getCookie } from '../../utils/cookie';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import {
+  fetchIngredients,
+  selectIngredients
+} from '../../services/slices/ingredientsSlice';
 
 const App = () => {
   const navigate = useNavigate();
@@ -27,13 +31,16 @@ const App = () => {
   const background = location.state?.background;
 
   const dispatch = useDispatch();
-  const isAuthChecked = useSelector(selectIsAuthChecked);
+  const ingredients = useSelector(selectIngredients);
 
   useEffect(() => {
     if (getCookie('accessToken')) {
       dispatch(getUser());
     }
-  }, [dispatch]);
+    if (!ingredients.length) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length]);
 
   return (
     <div className={styles.app}>
