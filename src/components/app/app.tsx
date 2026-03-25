@@ -33,6 +33,8 @@ const App = () => {
   const dispatch = useDispatch();
   const ingredients = useSelector(selectIngredients);
 
+  const closeModal = () => navigate(-1);
+
   useEffect(() => {
     if (getCookie('accessToken')) {
       dispatch(getUser());
@@ -105,7 +107,7 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal onClose={() => navigate(-1)} title={''}>
+              <Modal onClose={closeModal} title={''}>
                 <OrderInfo />
               </Modal>
             }
@@ -113,7 +115,7 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal onClose={() => navigate(-1)} title={''}>
+              <Modal onClose={closeModal} title={''}>
                 <IngredientDetails />
               </Modal>
             }
@@ -122,7 +124,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute>
-                <Modal onClose={() => navigate(-1)} title={''}>
+                <Modal onClose={closeModal} title={''}>
                   <OrderInfo />
                 </Modal>
               </ProtectedRoute>
