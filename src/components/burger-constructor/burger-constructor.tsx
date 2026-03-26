@@ -2,7 +2,10 @@ import { FC, useMemo } from 'react';
 import { BurgerConstructorUI } from '@ui';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from '../../services/store';
-import { selectBurgerConstructor } from '../../services/slices/constructorSlice';
+import {
+  clearConstructor,
+  selectBurgerConstructor
+} from '../../services/slices/constructorSlice';
 import { useSelector } from 'react-redux';
 import {
   selectOrderRequest,
@@ -20,7 +23,7 @@ export const BurgerConstructor: FC = () => {
   const orderRequest = useSelector(selectOrderRequest);
   const orderModalData = useSelector(selectOrderModalData);
 
-  const onOrderClick = () => {
+  const onOrderClick = async () => {
     const isAuth = Boolean(getCookie('accessToken'));
 
     if (!isAuth) {
@@ -36,7 +39,11 @@ export const BurgerConstructor: FC = () => {
       constructorItems.bun._id
     ];
 
-    dispatch(createOrder(ingredientsIds));
+    const resultAction = await dispatch(createOrder(ingredientsIds));
+
+    if (createOrder.fulfilled.match(resultAction)) {
+      dispatch(clearConstructor());
+    }
   };
 
   const closeOrderModal = () => {
