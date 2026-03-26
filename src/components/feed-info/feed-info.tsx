@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
 import {
-  fetchOrders,
+  fetchUserOrders,
   selectIsFeed,
   selectOrders
 } from '../../services/slices/ordersSlice';
@@ -19,7 +19,7 @@ export const FeedInfo: FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchOrders());
+    dispatch(fetchUserOrders());
   }, [dispatch]);
 
   const orders: TOrder[] = useSelector(selectOrders);
