@@ -47,10 +47,7 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.orderRequest = false;
-        state.errorText =
-          typeof action.payload === 'string'
-            ? action.payload
-            : 'Ошибка оформления заказа';
+        state.errorText = action.error.message || '';
       });
   },
   selectors: {

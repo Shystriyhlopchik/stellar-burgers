@@ -134,10 +134,7 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.errorText =
-          typeof action.payload === 'string'
-            ? action.payload
-            : 'Ошибка регистрации';
+        state.errorText = action.error.message || 'Ошибка регистрации';
       })
 
       .addCase(loginUser.pending, (state) => {
@@ -151,10 +148,7 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.errorText =
-          typeof action.payload === 'string'
-            ? action.payload
-            : 'Ошибка авторизации';
+        state.errorText = action.error.message || 'Ошибка авторизации';
       })
 
       .addCase(getUser.pending, (state) => {
