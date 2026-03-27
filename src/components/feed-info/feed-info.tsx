@@ -1,27 +1,16 @@
-import { FC, useEffect } from 'react';
-
+import { FC } from 'react';
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
-import {
-  fetchUserOrders,
-  selectIsFeed,
-  selectOrders
-} from '../../services/slices/ordersSlice';
-import { useDispatch, useSelector } from '../../services/store';
+import { selectIsFeed, selectOrders } from '../../services/slices/ordersSlice';
+import { useSelector } from '../../services/store';
 
 const getOrders = (orders: TOrder[], status: string): number[] =>
   orders
     .filter((item) => item.status === status)
     .map((item) => item.number)
-    .slice(0, 20);
+    .slice(0, 15);
 
 export const FeedInfo: FC = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchUserOrders());
-  }, [dispatch]);
-
   const orders: TOrder[] = useSelector(selectOrders);
   const feed = useSelector(selectIsFeed);
 

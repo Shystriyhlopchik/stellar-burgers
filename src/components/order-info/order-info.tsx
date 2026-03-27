@@ -10,9 +10,9 @@ import { selectUserOrders } from '../../services/slices/profileOrdersSlice';
 import {
   getOrderByNumber,
   selectCurrentOrder,
+  selectOrders,
   selectOrdersLoading
 } from '../../services/slices/ordersSlice';
-import { selectOrders as selectFeedOrders } from '../../services/slices/feedSlice';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
@@ -20,7 +20,7 @@ export const OrderInfo: FC = () => {
 
   const ingredients = useSelector(selectIngredients);
 
-  const feedOrders = useSelector(selectFeedOrders);
+  const feedOrders = useSelector(selectOrders);
   const userOrders = useSelector(selectUserOrders);
   const currentOrder = useSelector(selectCurrentOrder);
   const isLoading = useSelector(selectOrdersLoading);

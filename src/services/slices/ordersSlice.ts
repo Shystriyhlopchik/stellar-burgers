@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { getOrderByNumberApi, getOrdersApi } from '@api';
+import { getFeedsApi, getOrderByNumberApi, getOrdersApi } from '@api';
 
 type OrdersState = {
   orders: TOrder[];
@@ -18,10 +18,20 @@ const initialState: OrdersState = {
   isLoading: false
 };
 
-export const fetchUserOrders = createAsyncThunk(
-  'orders/fetchUserOrders',
-  async () => await getOrdersApi()
+type FeedState = {
+  orders: TOrder[];
+  isLoading: boolean;
+};
+
+export const fetchFeeds = createAsyncThunk(
+  'feed/fetchFeeds',
+  async () => await getFeedsApi()
 );
+
+// export const fetchUserOrders = createAsyncThunk(
+//   'orders/fetchUserOrders',
+//   async () => await getOrdersApi()
+// );
 
 export const getOrderByNumber = createAsyncThunk(
   'orders/getOrderByNumber',
@@ -41,17 +51,17 @@ const ordersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUserOrders.pending, (state) => {
+      .addCase(fetchFeeds.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+      .addCase(fetchFeeds.fulfilled, (state, action) => {
         const { orders, total, totalToday } = action.payload;
         state.orders = orders;
         state.total = total;
         state.totalToday = totalToday;
         state.isLoading = false;
       })
-      .addCase(fetchUserOrders.rejected, (state) => {
+      .addCase(fetchFeeds.rejected, (state) => {
         state.isLoading = false;
       })
 
@@ -73,8 +83,7 @@ const ordersSlice = createSlice({
     selectIsFeed: (state) => ({
       total: state.total,
       totalToday: state.totalToday
-    }),
-    selectUserOrders: (state) => state.orders
+    })
   }
 });
 
