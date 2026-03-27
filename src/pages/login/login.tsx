@@ -1,17 +1,40 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from '../../services/store';
+import { useSelector } from 'react-redux';
+import { loginUser, selectUserError } from '../../services/slices/authSlice';
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const errorText = useSelector(selectUserError);
+
+  const from = location.state?.from?.pathname || '/';
+
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+
+    const resultAction = await dispatch(
+      loginUser({
+        email,
+        password
+      })
+    );
+
+    if (loginUser.fulfilled.match(resultAction)) {
+      navigate(from, { replace: true });
+    }
   };
 
   return (
     <LoginUI
-      errorText=''
+      errorText={errorText}
       email={email}
       setEmail={setEmail}
       password={password}
